@@ -3,6 +3,7 @@ using FreakyFashionServices.CatalogService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreakyFashionServices.CatalogService.Migrations
 {
     [DbContext(typeof(CatalogServiceContext))]
-    partial class CatalogServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20211220202542_RemoveUrlSlugFromConstructor")]
+    partial class RemoveUrlSlugFromConstructor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

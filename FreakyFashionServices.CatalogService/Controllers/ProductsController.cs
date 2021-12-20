@@ -8,28 +8,40 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FreakyFashionServices.CatalogService.Data;
 using FreakyFashionServices.CatalogService.Models.Domain;
+using FreakyFashionServices.CatalogService.Models.DTO;
 
 namespace FreakyFashionServices.CatalogService.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CatalogController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly CatalogServiceContext _context;
 
-        public CatalogController(CatalogServiceContext context)
+        public ProductsController(CatalogServiceContext context)
         {
             _context = context;
         }
 
-        // GET: api/Catalog
+        // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public IEnumerable<ProductDto> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            var productDtos = _context.Products.Select(x => new ProductDto
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                ImageUrl = x.ImageUrl,
+                Price = x.Price,
+                ArticleNumber = x.ArticleNumber,
+                UrlSlug = x.UrlSlug,
+            });
+            
+            return productDtos;
         }
 
-        // GET: api/Catalog/5
+        // GET: api/products/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
@@ -43,7 +55,7 @@ namespace FreakyFashionServices.CatalogService.Controllers
             return product;
         }
 
-        // PUT: api/Catalog/5
+        // PUT: api/products/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutProduct(int id, Product product)
@@ -74,18 +86,25 @@ namespace FreakyFashionServices.CatalogService.Controllers
             return NoContent();
         }
 
-        // POST: api/Catalog
+        // POST: api/products
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product product)
+        public IActionResult PostProduct(AddProductDto addProductDto)
         {
+            var product = new Product(
+                addProductDto.Name,
+                addProductDto.Description,
+                addProductDto.ImageUrl,
+                addProductDto.Price,
+                addProductDto.ArticleNumber);
+            
             _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.Id }, product);
+            return Created("", product);
         }
 
-        // DELETE: api/Catalog/5
+        // DELETE: api/products/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
