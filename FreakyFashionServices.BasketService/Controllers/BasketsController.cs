@@ -23,9 +23,9 @@ namespace FreakyFashionServices.BasketService.Controllers
         {
             var serializedBasket = JsonSerializer.Serialize(basketDto);
 
-            Cache.SetString(basketDto.Identifier, serializedBasket);
+            Cache.SetString(identifier, serializedBasket);
             
-            return Created("", null); // 201 Created
+            return NoContent(); // 204 No Content
         }
 
         // GET /api/baskets/{identifier}
