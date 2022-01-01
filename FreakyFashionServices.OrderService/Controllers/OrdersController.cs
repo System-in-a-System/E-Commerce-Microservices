@@ -31,7 +31,7 @@ namespace FreakyFashionServices.OrderService.Controllers
             // Fetch data from basket based on common identifier
             var httpRequestMessage = new HttpRequestMessage(
                 HttpMethod.Get,
-                $"http://localhost:5000/api/baskets/{orderDto.Identifier}")
+                $"http://localhost:8000/api/baskets/{orderDto.Identifier}")
             {
                 Headers = { { HeaderNames.Accept, "application/json" }, }
             };
@@ -71,22 +71,5 @@ namespace FreakyFashionServices.OrderService.Controllers
 
             return Created("", order); // 201 Created
         }
-
-        /*
-        // GET /api/patients/{socialSecurityNumber}
-        [HttpGet("patients/{socialSecurityNumber}")]
-        public async Task<IActionResult> GetPatient(string socialSecurityNumber)
-        {
-            // Aggregera data från två servicar, och returnerar patient 
-            // samt dennas journal.
-            var patientDto = await FetchPatient(socialSecurityNumber);
-
-            if (patientDto == null)
-                return NotFound(); // 404 Not Found
-
-            patientDto.Journal = await FetchJournalEntries(socialSecurityNumber);
-
-            return Ok(patientDto); // 200 OK
-        }*/
     }
 }

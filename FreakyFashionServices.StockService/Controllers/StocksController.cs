@@ -5,12 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FreakyFashionServices.StockService.Controllers
 {
-    // TODO: Kalla denna för StockLevelController?
     [Route("api/[controller]")]
     [ApiController]
-    public class StockController : ControllerBase
+    public class StocksController : ControllerBase
     {
-        public StockController(StockServiceContext context)
+        public StocksController(StockServiceContext context)
         {
             Context = context;
         }
@@ -55,11 +54,4 @@ namespace FreakyFashionServices.StockService.Controllers
             return stockLevelDtos;
         }
     }
-
-    public class StockLevelDto
-    {
-        public string ArticleNumber { get; set; }
-        public int Stock { get; set; }
-    }
-
 }
