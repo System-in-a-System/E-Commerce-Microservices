@@ -4,7 +4,8 @@
     {
         public string Identifier { get; set; }
         public string Customer { get; set; }
-        public ICollection<OrderLineDto> OrderLineDtos { get; set; }
+        public string OrderKey { get; set; }
+        public ICollection<OrderLineDto> OrderLines { get; set; }
             = new List<OrderLineDto>();
     }
 }

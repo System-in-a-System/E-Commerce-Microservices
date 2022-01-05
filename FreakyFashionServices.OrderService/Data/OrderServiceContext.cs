@@ -13,5 +13,12 @@ namespace FreakyFashionServices.OrderService.Data
         {
 
         }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Order>()
+                .HasIndex(u => u.OrderKey)
+                .IsUnique();
+        }
     }
 }

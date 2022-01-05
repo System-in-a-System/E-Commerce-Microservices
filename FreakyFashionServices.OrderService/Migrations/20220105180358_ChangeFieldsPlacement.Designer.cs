@@ -4,6 +4,7 @@ using FreakyFashionServices.OrderService.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreakyFashionServices.OrderService.Migrations
 {
     [DbContext(typeof(OrderServiceContext))]
-    partial class OrderServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20220105180358_ChangeFieldsPlacement")]
+    partial class ChangeFieldsPlacement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

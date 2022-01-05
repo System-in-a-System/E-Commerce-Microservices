@@ -55,8 +55,13 @@ namespace FreakyFashionServices.OrderService.Controllers
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var basket = await System.Text.Json.JsonSerializer.DeserializeAsync<BasketDto>(contentStream, options);
 
-            // Add basket items as orderlines to order
+            
+            // Instantiate a new order & retrieve respective data for its datafields
             var order = new Order(orderDto.Identifier, orderDto.Customer);
+            
+            var orderKey = Guid.NewGuid().ToString();
+            order.OrderKey = orderKey;
+            
             var orderLines = basket?.Items.Select(item => new OrderLine(item.ProductId, item.Quantity));
 
             if (orderLines.Any())
@@ -66,16 +71,11 @@ namespace FreakyFashionServices.OrderService.Controllers
                     order.OrderLines.Add(orderline);
                 }
             }
-
-            // Add order to the database
-            //_context.Orders.Add(order);
-            //await _context.SaveChangesAsync();
-
-            //return Created("", order); // 201 Created//
-
-
-
-            //TODO: add order to the queue
+             
+             
+            // Construct a fresh instance of connection factory
+            // with a specified connection string with a specified port
+            // that is mapped for container running RabbitMq
             var factory = new ConnectionFactory
             {
                 Uri = new Uri("amqp://guest:guest@localhost:5672")
@@ -83,8 +83,8 @@ namespace FreakyFashionServices.OrderService.Controllers
 
             using var connection = factory.CreateConnection();
 
-            // En kanal ger oss möjlighet att prata med RabbitMQ. Vi kan ha flera kanaler
-            // men i detta fallet behöver vi enbart 1.
+
+            // Channel that let us talk to RabbitMQ. 
             using var channel = connection.CreateModel();
 
             // Säkerställ att kö finns - om inte, skapa den.
@@ -115,8 +115,10 @@ namespace FreakyFashionServices.OrderService.Controllers
                basicProperties: null,
                body: body);
 
-
-            return Accepted(); // 202 Accepted
+            
+            var orderIdObject = new OrderIdDto { OrderId = orderKey };
+            
+            return Accepted(orderIdObject); // 202 Accepted
         }
     }
 }

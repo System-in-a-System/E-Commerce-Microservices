@@ -38,6 +38,10 @@ namespace FreakyFashionServices.OrderProcessor.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("OrderKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("OrderId");
 
                     b.ToTable("Orders");

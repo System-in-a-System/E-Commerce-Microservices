@@ -47,8 +47,19 @@ consumer.Received += (sender, e) => {
 
     var order = new Order(
        dto.Identifier,
-       dto.Customer
+       dto.Customer,
+       dto.OrderKey
     );
+
+    var orderLines = dto.OrderLines.Select(item => new OrderLine(item.ProductId, item.Quantity));
+
+    if (orderLines.Any())
+    {
+        foreach (var orderline in orderLines)
+        {
+            order.OrderLines.Add(orderline);
+        }
+    }
 
     OrderManager.Register(order);
 };

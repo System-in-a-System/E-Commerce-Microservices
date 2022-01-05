@@ -1,6 +1,7 @@
 ﻿using FreakyFashionServices.APIGateway.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using Newtonsoft.Json;
 using System.Text;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
@@ -81,7 +82,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            productDtos = await JsonSerializer.DeserializeAsync
+            productDtos = await System.Text.Json.JsonSerializer.DeserializeAsync
                     <IEnumerable<ProductDto>>(contentStream, options);
 
             return productDtos; 
@@ -111,7 +112,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            stockLevelDtos = await JsonSerializer.DeserializeAsync
+            stockLevelDtos = await System.Text.Json.JsonSerializer.DeserializeAsync
                     <IEnumerable<StockLevelDto>>(contentStream, options);
 
             return stockLevelDtos;
@@ -123,7 +124,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
         public async Task<IActionResult> AddProduct(AddProductDto addProductDto)
         {
             var productJson = new StringContent(
-                JsonSerializer.Serialize(addProductDto),
+                System.Text.Json.JsonSerializer.Serialize(addProductDto),
                 Encoding.UTF8,
                 Application.Json);
 
@@ -143,7 +144,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
         public async Task<IActionResult> UpdateBasket(BasketDto basketDto)
         {
             var basketJson = new StringContent(
-                JsonSerializer.Serialize(basketDto),
+                System.Text.Json.JsonSerializer.Serialize(basketDto),
                 Encoding.UTF8,
                 Application.Json);
 
@@ -181,7 +182,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
 
             var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-            basketDto = await JsonSerializer.DeserializeAsync<BasketDto>(contentStream, options);
+            basketDto = await System.Text.Json.JsonSerializer.DeserializeAsync<BasketDto>(contentStream, options);
 
             return Ok(basketDto); // 200 OK
         }
@@ -192,7 +193,7 @@ namespace FreakyFashionServices.APIGateway.Controllers
         public async Task<IActionResult> AddOrder(OrderDto orderDto)
         {
             var orderJson = new StringContent(
-                JsonSerializer.Serialize(orderDto),
+                System.Text.Json.JsonSerializer.Serialize(orderDto),
                 Encoding.UTF8,
                 Application.Json);
 
@@ -202,8 +203,9 @@ namespace FreakyFashionServices.APIGateway.Controllers
                 await httpClient.PostAsync("http://localhost:6000/api/orders", orderJson);
 
             var responseContent = await httpResponseMessage.Content.ReadAsStringAsync();
+            var orderIdDto = JsonConvert.DeserializeObject<OrderIdDto>(responseContent);
 
-            return Created("", responseContent); // 201 Created
+            return Created("", orderIdDto); // 201 Created
         }
     }
 }
